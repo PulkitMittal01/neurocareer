@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AIChatMentor from './AIChatMentor';
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
+const rawApiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
+const API_URL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/api`;
 
 function ResultsDisplay({ roles, studentProfile }) {
   const [selectedRole, setSelectedRole] = useState(null);
@@ -28,7 +29,7 @@ function ResultsDisplay({ roles, studentProfile }) {
 
   const renderList = (items) => {
     if (!items) return null;
-    
+
     // If it's an array, handle its elements
     if (Array.isArray(items)) {
       return items.map((item, i) => {
@@ -40,7 +41,7 @@ function ResultsDisplay({ roles, studentProfile }) {
         return <li key={i}>{String(item)}</li>;
       });
     }
-    
+
     // If it's an object, render keys/values
     if (typeof items === 'object' && items !== null) {
       return Object.entries(items).map(([key, val], i) => {
@@ -48,45 +49,45 @@ function ResultsDisplay({ roles, studentProfile }) {
         return <li key={i}>{key}{valStr}</li>;
       });
     }
-    
+
     // If it's a string, just render one item
     if (typeof items === 'string') {
       return <li>{items}</li>;
     }
-    
+
     // Fallback
     return <li>{String(items)}</li>;
   };
 
   return (
     <div className="results-container">
-        <div className="results-header">
-  <div style={{ 
-    width: '80px', 
-    height: '80px', 
-    background: 'white',
-    borderRadius: '14px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: '0 auto 16px',
-    border: '1px solid #E8E8E8',
-    boxShadow: '0 2px 8px rgba(73, 84, 100, 0.08)'
-  }}>
-    <img 
-      src={`${process.env.PUBLIC_URL}/logo-128.png`} 
-      alt="Career Coach Logo"
-      style={{ 
-        width: '60px', 
-        height: '60px'
-      }}
-    />
-  </div>
-  <h2>Your Recommended Careers</h2>
-  <p>
-    Based on your {studentProfile?.neurodivergence?.toUpperCase()} neurodivergence and interests
-  </p>
-</div>
+      <div className="results-header">
+        <div style={{
+          width: '80px',
+          height: '80px',
+          background: 'white',
+          borderRadius: '14px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: '0 auto 16px',
+          border: '1px solid #E8E8E8',
+          boxShadow: '0 2px 8px rgba(73, 84, 100, 0.08)'
+        }}>
+          <img
+            src={`${process.env.PUBLIC_URL}/logo-128.png`}
+            alt="Career Coach Logo"
+            style={{
+              width: '60px',
+              height: '60px'
+            }}
+          />
+        </div>
+        <h2>Your Recommended Careers</h2>
+        <p>
+          Based on your {studentProfile?.neurodivergence?.toUpperCase()} neurodivergence and interests
+        </p>
+      </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '32px', alignItems: 'start' }}>
         {/* Left: Roles */}

@@ -12,7 +12,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
+  const rawApiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
+  const API_URL = rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/api`;
 
   const handleQuizSubmit = async (answers) => {
     try {
@@ -52,7 +53,7 @@ function App() {
 
     } catch (err) {
       console.error('❌ Error:', err);
-      
+
       // Provide helpful error messages
       if (err.response?.status === 401) {
         setError('API authentication failed. Please check your Groq API key.');
@@ -106,7 +107,7 @@ function App() {
       ) : (
         <div className="fade-in">
           <ResultsDisplay roles={roles} studentProfile={studentProfile} />
-          
+
           {/* Retake Button */}
           <div className="flex justify-center py-8">
             <button
