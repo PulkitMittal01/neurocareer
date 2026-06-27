@@ -35,7 +35,9 @@ Return ONLY valid JSON in this exact format, no other text:
   "companies": ["Company 1", "Company 2", "Company 3", "Company 4", "Company 5"],
   "accommodations": ["Accommodation 1", "Accommodation 2", "Accommodation 3", "Accommodation 4", "Accommodation 5"],
   "industry": "General Industry Name (e.g. Tech, Media, Healthcare)"
-}`;
+}
+
+IMPORTANT: The "companies" and "accommodations" fields MUST be arrays of strings. Do not use objects for these fields.`;
 
     // Call Groq API
     const response = await axios.post(
@@ -76,6 +78,27 @@ Return ONLY valid JSON in this exact format, no other text:
     if (!jobDetails.companies || !jobDetails.accommodations) {
       throw new Error('Invalid response structure from Groq');
     }
+
+    const ensureArrayOfStrings = (field) => {
+      if (Array.isArray(field)) {
+        return field.map(item => {
+          if (typeof item === 'object' && item !== null) {
+            return Object.keys(item).join(', ');
+          }
+          return String(item);
+        });
+      }
+      if (typeof field === 'object' && field !== null) {
+        return Object.keys(field);
+      }
+      if (typeof field === 'string') {
+        return [field];
+      }
+      return [];
+    };
+
+    jobDetails.companies = ensureArrayOfStrings(jobDetails.companies);
+    jobDetails.accommodations = ensureArrayOfStrings(jobDetails.accommodations);
 
     console.log(`✅ Successfully generated details for: ${normalizedName}`);
 
