@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AIChatMentor from './AIChatMentor';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
 
 function ResultsDisplay({ roles, studentProfile }) {
   const [selectedRole, setSelectedRole] = useState(null);
   const [jobDetails, setJobDetails] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
 
   useEffect(() => {
     if (selectedRole) {
